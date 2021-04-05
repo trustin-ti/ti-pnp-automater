@@ -5,25 +5,12 @@ param (
     $JsonFile
 )
 
-Clear-Host # Clear the screen
-
-Write-Host "========== PnP: JSON Commands =========="
-Write-Host
-
-# Read the JSON file
-Write-Log -Level "INFO" -Message "Reading commands from $JsonFile..."
-$JSONCommands = Get-Content -Path $JsonFile -Raw | ConvertFrom-Json -AsHashtable
-
-$JSONCommands.commands | ForEach-Object {
-    Invoke-PnPCommand @_
-}
-
 function Get-TimeStamp {
     return "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date)
 }
 
 function Write-Log($Level, $Message) {
-    Write-Host "$(Get-TimeStamp)[$Level] $Message" 
+    Write-Host "$(Get-TimeStamp)[$Level] $Message"
 }
 
 function Invoke-PnPCommand {
@@ -55,4 +42,15 @@ function Invoke-PnPCommand {
     &$commandName @constNamedArguments
 }
 
+Clear-Host # Clear the screen
 
+Write-Host "========== PnP: JSON Commands =========="
+Write-Host
+
+# Read the JSON file
+Write-Log -Level "INFO" -Message "Reading commands from $JsonFile..."
+$JSONCommands = Get-Content -Path $JsonFile -Raw | ConvertFrom-Json -AsHashtable
+
+$JSONCommands.commands | ForEach-Object {
+    Invoke-PnPCommand @_
+}
